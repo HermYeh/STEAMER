@@ -1,5 +1,5 @@
 use chrono::{DateTime, Local};
-use egui::{pos2, vec2, Align2, Color32, FontId, Frame, Id, Pos2, Rect, Response, Sense, Stroke, TextureHandle, Vec2};
+use egui::{pos2, vec2, Align2, Color32, FontId, Frame, Id, Pos2, Rect, Response, Sense, Stroke, SystemTheme, TextureHandle, Vec2, ViewportCommand};
 use std::time::{Duration, Instant, SystemTime};
 use image::GenericImageView;
 use std::collections::HashMap;
@@ -94,11 +94,16 @@ impl TemplateApp {
                     color_image,
                     egui::TextureOptions::default(),
                 );
-
+                
                 app.image_texture.push(Some(texture_handle));
+
+
             }
         }
         cc.egui_ctx.set_zoom_factor(2.0);
+        cc.egui_ctx.send_viewport_cmd(ViewportCommand::SetTheme(SystemTheme::Light));
+ 
+        
         app
     }
 }

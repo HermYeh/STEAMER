@@ -4,9 +4,12 @@
 // When compiling natively:
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> eframe::Result<()> {
+    use egui::{Context, SystemTheme, ViewportCommand};
+
     env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
     
     let native_options = eframe::NativeOptions {
+
         viewport: egui::ViewportBuilder::default()
             .with_icon(
                 // NOTE: Adding an icon is optional
@@ -15,6 +18,7 @@ fn main() -> eframe::Result<()> {
             ).with_fullscreen(true).with_maximized(true),
         ..Default::default()
     };
+    
     eframe::run_native(
         "steamer",
         native_options,
