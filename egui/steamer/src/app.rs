@@ -225,7 +225,7 @@ impl eframe::App for TemplateApp {
                                                         let sec = elapsed.num_seconds() as i32;
                                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                                     
-                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
                                                 }}
                                                 }
                                                 Item::Xiaolongbao => {
@@ -246,7 +246,7 @@ impl eframe::App for TemplateApp {
                                                         let sec = elapsed.num_seconds() as i32;
                                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                                         
-                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
                                                 }}
                                                 }
                                                 Item::ChickDumpling => {
@@ -269,7 +269,7 @@ impl eframe::App for TemplateApp {
                                                         let sec = elapsed.num_seconds() as i32;
                                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                                         
-                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
                                                 }}
                                                 }
                                                 Item::FriedBun => {
@@ -290,7 +290,7 @@ impl eframe::App for TemplateApp {
                                                         let sec = elapsed.num_seconds() as i32;
                                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                                         
-                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
                                                 }}
                                                 }
                                             }
@@ -471,7 +471,7 @@ impl eframe::App for TemplateApp {
                                         let sec = elapsed.num_seconds();
                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                         
-                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
                                 
                                 }
                                 Item::Xiaolongbao=>{
@@ -489,7 +489,7 @@ impl eframe::App for TemplateApp {
                                         let sec = elapsed.num_seconds();
                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                         
-                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
                                 
                                 }
                                 Item::ChickDumpling=>{
@@ -525,7 +525,7 @@ impl eframe::App for TemplateApp {
                                         let sec = elapsed.num_seconds();
                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                         
-                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
                                 
                                 }
                                 
