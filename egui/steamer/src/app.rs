@@ -97,10 +97,10 @@ impl TemplateApp {
                 
                 app.image_texture.push(Some(texture_handle));
 
-
+            
             }
         }
-        cc.egui_ctx.set_zoom_factor(2.0);
+        cc.egui_ctx.set_zoom_factor(1.5);
         cc.egui_ctx.send_viewport_cmd(ViewportCommand::SetTheme(SystemTheme::Light));
  
         
