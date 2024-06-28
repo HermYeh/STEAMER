@@ -330,8 +330,10 @@ impl eframe::App for TemplateApp {
             });
             
      
-      
-       
+            ui.label(format!("{:?}",self.selection));
+            let widget_size = Vec2::new(75.0, 75.0);
+                                
+            
      
             for i in 0..4 {
                 
