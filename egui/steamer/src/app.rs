@@ -76,7 +76,7 @@ impl TemplateApp {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         let mut app: TemplateApp = Default::default();
         let image_path = vec!["./assets/shrimpdumpling.png", "./assets/xiaolongbao.png", "./assets/chicken.png", "./assets/bun.png"];
-        for img in 0..image_path.len() {
+        for img in 0..4 {
             if let Ok(image) = image::open(image_path[img]) {
                 let size = [image.width() as usize, image.height() as usize];
                 let image_buffer = image.to_rgba8();
