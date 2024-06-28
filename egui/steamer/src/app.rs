@@ -98,6 +98,7 @@ impl TemplateApp {
                 app.image_texture.push(Some(texture_handle));
             }
         }
+        cc.egui_ctx.set_zoom_factor(2.0);
         app
     }
 }
@@ -113,8 +114,10 @@ impl eframe::App for TemplateApp {
     
     fn update(&mut self, ctx: &eframe::egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.vertical(|ui| {
 
+            
+            ui.vertical(|ui| {
+                
                 for row in 0..5 {
                     ui.horizontal(|ui| {
                         for col in 1..6 {
@@ -183,7 +186,7 @@ impl eframe::App for TemplateApp {
                                 
                                 if button.clicked() {
                                     self.button_index=but_index;
-
+                                    
                                     self.buttons = vec![false; 20];
                                     self.buttons[but_index] = true;
                                  
