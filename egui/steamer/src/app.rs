@@ -51,7 +51,7 @@ impl Default for TemplateApp {
         Self {
             label: "Hello World!".to_owned(),
             value: 2.7,
-            pos: vec![vec![Pos2 { x: 500.0, y: 500.0 }], vec![Pos2 { x: 400.0, y: 500.0 }], vec![Pos2 { x: 300.0, y: 500.0 }], vec![Pos2 { x: 200.0, y: 500.0 }]],
+            pos: vec![vec![Pos2 { x: 400.0, y: 400.0 }], vec![Pos2 { x: 300.0, y: 400.0 }], vec![Pos2 { x: 200.0, y: 400.0 }], vec![Pos2 { x: 100.0, y: 400.0 }]],
             time: Vec::new(),
             response: vec![Vec::new(); 4],
             rect: Vec::new(),
@@ -131,7 +131,7 @@ impl eframe::App for TemplateApp {
                                     egui::Button::new(but_index.to_string())
                                 };
                                 let button = ui.add_sized(
-                                    [75.0, 75.0],
+                                    [50.0, 50.0],
                                     button,
                                 );
                                
@@ -427,7 +427,7 @@ impl eframe::App for TemplateApp {
                 count+=1;
                 let kind:String = Default::default();
                 let  button = ui.add_sized(
-                    [75.0, 75.0],
+                    [50.0, 50.0],
                     Button::new(kind),);
                 ui.add_space(20.0);
                 let pos=Pos2{x:  button.rect.min.x+25.0,y:  button.rect.max.y+20.0};
