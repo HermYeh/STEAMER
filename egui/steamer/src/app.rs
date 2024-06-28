@@ -212,12 +212,12 @@ impl eframe::App for TemplateApp {
                                                             texture.id(),
                                                             button.rect,
                                                             Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
-                                                            Color32::WHITE,
+                                                            Color32::BLACK,
                                                         );
                                                     }
                                               
                                                    if  self.steamer[but_index].len()>1{
-                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::WHITE);
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::BLACK);
                                                     }else{
                                                    if let Some(start_time) = self.timer_start.get(&but_index) {
                                                         let elapsed =timenow().to_utc()-start_time.to_utc();
@@ -225,7 +225,7 @@ impl eframe::App for TemplateApp {
                                                         let sec = elapsed.num_seconds() as i32;
                                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                                     
-                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
                                                 }}
                                                 }
                                                 Item::Xiaolongbao => {
@@ -234,11 +234,11 @@ impl eframe::App for TemplateApp {
                                                             texture.id(),
                                                             button.rect,
                                                             Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
-                                                            Color32::WHITE,
+                                                            Color32::BLACK,
                                                         );
                                                     }
                                                    if  self.steamer[but_index].len()>1{
-                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::WHITE);
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::BLACK);
                                                     }else{
                                                    if let Some(start_time) = self.timer_start.get(&but_index) {
                                                         let elapsed =timenow().to_utc()-start_time.to_utc();
@@ -246,7 +246,7 @@ impl eframe::App for TemplateApp {
                                                         let sec = elapsed.num_seconds() as i32;
                                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                                         
-                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
                                                 }}
                                                 }
                                                 Item::ChickDumpling => {
@@ -255,13 +255,13 @@ impl eframe::App for TemplateApp {
                                                             texture.id(),
                                                             button.rect,
                                                             Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
-                                                            Color32::WHITE,
+                                                            Color32::BLACK,
                                                         );
                                                         
                                                     }
 
                                                    if  self.steamer[but_index].len()>1{
-                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::WHITE);
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::BLACK);
                                                     }else{
                                                    if let Some(start_time) = self.timer_start.get(&but_index) {
                                                         let elapsed =timenow().to_utc()-start_time.to_utc();
@@ -269,7 +269,7 @@ impl eframe::App for TemplateApp {
                                                         let sec = elapsed.num_seconds() as i32;
                                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                                         
-                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
                                                 }}
                                                 }
                                                 Item::FriedBun => {
@@ -278,11 +278,11 @@ impl eframe::App for TemplateApp {
                                                             texture.id(),
                                                             button.rect,
                                                             Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
-                                                            Color32::WHITE,
+                                                            Color32::BLACK,
                                                         );
                                                     }
                                                     if  self.steamer[but_index].len()>1{
-                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::WHITE);
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::BLACK);
                                                     }else{
                                                    if let Some(start_time) = self.timer_start.get(&but_index) {
                                                         let elapsed =timenow().to_utc()-start_time.to_utc();
@@ -290,7 +290,7 @@ impl eframe::App for TemplateApp {
                                                         let sec = elapsed.num_seconds() as i32;
                                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                                         
-                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
                                                 }}
                                                 }
                                             }
@@ -354,7 +354,7 @@ impl eframe::App for TemplateApp {
                 let responses = ui.allocate_rect(rects, egui::Sense::click_and_drag());
                 
                 if let Some(texture) = &self.image_texture[i] {
-                    ui.painter().image(texture.id(), rects, Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)), Color32::WHITE);
+                    ui.painter().image(texture.id(), rects, Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)), Color32::BLACK);
                 }
              
                 if responses.drag_started() {
@@ -394,7 +394,7 @@ impl eframe::App for TemplateApp {
                         self.response[i][r] = ui.allocate_rect(rect, egui::Sense::click_and_drag());
                         
                         if let Some(texture) = &self.image_texture[i] {
-                            ui.painter().image(texture.id(), rect, Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)), Color32::WHITE);
+                            ui.painter().image(texture.id(), rect, Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)), Color32::BLACK);
                         }
                         if self.response[i][r].drag_started() {
                             self.selection = None;
@@ -462,7 +462,7 @@ impl eframe::App for TemplateApp {
                                             texture.id(),
                                             button.rect,
                                             Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
-                                            Color32::WHITE,
+                                            Color32::BLACK,
                                         );
                                     }
                                         let start_time= item.1;
@@ -471,7 +471,7 @@ impl eframe::App for TemplateApp {
                                         let sec = elapsed.num_seconds();
                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                         
-                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
+                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
                                 
                                 }
                                 Item::Xiaolongbao=>{
@@ -480,7 +480,7 @@ impl eframe::App for TemplateApp {
                                             texture.id(),
                                             button.rect,
                                             Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
-                                            Color32::WHITE,
+                                            Color32::BLACK,
                                         );
                                     }
                                         let start_time= item.1;
@@ -489,7 +489,7 @@ impl eframe::App for TemplateApp {
                                         let sec = elapsed.num_seconds();
                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                         
-                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
+                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
                                 
                                 }
                                 Item::ChickDumpling=>{
@@ -498,7 +498,7 @@ impl eframe::App for TemplateApp {
                                             texture.id(),
                                             button.rect,
                                             Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
-                                            Color32::WHITE,
+                                            Color32::BLACK,
                                         );
                                     }
                                         let start_time= item.1;
@@ -507,7 +507,7 @@ impl eframe::App for TemplateApp {
                                         let sec = elapsed.num_seconds();
                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                         
-                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
+                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
                                 
                                 }
                                 Item::FriedBun=>{
@@ -516,7 +516,7 @@ impl eframe::App for TemplateApp {
                                             texture.id(),
                                             button.rect,
                                             Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
-                                            Color32::WHITE,
+                                            Color32::BLACK,
                                         );
                                     }
                                     let start_time= item.1;
@@ -525,7 +525,7 @@ impl eframe::App for TemplateApp {
                                         let sec = elapsed.num_seconds();
                                         let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                         
-                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::WHITE);
+                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
                                 
                                 }
                                 
