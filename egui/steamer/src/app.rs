@@ -139,7 +139,7 @@ impl eframe::App for TemplateApp {
                                 );
                                
                             button.context_menu(|ui| {
-                                    ui.menu_button("Add", |ui| {
+                                   
                                         if ui.button("Shrimp").clicked() {
                                            self.selection = Some(Item::Shrimp);
                                            self.timer_start.insert(but_index,timenow());
@@ -171,12 +171,9 @@ impl eframe::App for TemplateApp {
                                          
                                          }
                                          
-                                    });
+                             
                                     
-                                    if ui.button("Delete").clicked(){
-                                        self.steamer[but_index].clear();
-                                    }
-                                 
+                           
                                     
                                 });
                               
@@ -190,6 +187,12 @@ impl eframe::App for TemplateApp {
                                     self.buttons = vec![false; 20];
                                     self.buttons[but_index] = true;
                                  
+                                }
+                                if button.double_clicked(){
+                          
+                                        self.steamer[but_index].clear();
+                            
+                             
                                 }
                                 let pos=Pos2{x:  button.rect.min.x+25.0,y:  button.rect.max.y+20.0};
                                                         
