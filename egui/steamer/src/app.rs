@@ -51,7 +51,7 @@ impl Default for TemplateApp {
         Self {
             label: "Hello World!".to_owned(),
             value: 2.7,
-            pos: vec![vec![Pos2 { x: 700.0, y: 750.0 }], vec![Pos2 { x: 500.0, y: 750.0 }], vec![Pos2 { x: 300.0, y: 750.0 }], vec![Pos2 { x: 100.0, y: 750.0 }]],
+            pos: vec![vec![Pos2 { x: 500.0, y: 500.0 }], vec![Pos2 { x: 400.0, y: 500.0 }], vec![Pos2 { x: 300.0, y: 500.0 }], vec![Pos2 { x: 200.0, y: 500.0 }]],
             time: Vec::new(),
             response: vec![Vec::new(); 4],
             rect: Vec::new(),
@@ -170,10 +170,10 @@ impl eframe::App for TemplateApp {
                                          
                                     });
                                     
-                                    ui.menu_button("Deleted", |ui| {
-                                    
-
-                                    });
+                                    if ui.button("Delete").clicked(){
+                                        self.steamer[but_index].clear();
+                                    }
+                                 
                                     
                                 });
                               
@@ -183,6 +183,7 @@ impl eframe::App for TemplateApp {
                                 
                                 if button.clicked() {
                                     self.button_index=but_index;
+
                                     self.buttons = vec![false; 20];
                                     self.buttons[but_index] = true;
                                  
@@ -420,13 +421,25 @@ impl eframe::App for TemplateApp {
         
         egui::SidePanel::right("right").show(ctx, |ui| {
            let but_index= self.button_index;
+           let mut count=0;
+           let len=self.steamer[but_index].len();
             for item in self.steamer[but_index].clone().into_iter().rev(){
+                count+=1;
                 let kind:String = Default::default();
                 let  button = ui.add_sized(
                     [75.0, 75.0],
                     Button::new(kind),);
                 ui.add_space(20.0);
                 let pos=Pos2{x:  button.rect.min.x+25.0,y:  button.rect.max.y+20.0};
+                button.context_menu(|ui| {
+                    if ui.button("Removed").clicked() {
+                        self.steamer[but_index].remove( len-count);
+                        
+                       }
+                    });
+                if button.double_clicked(){
+                    self.steamer[but_index].remove( len-count);
+                }
 
                 match item.0 {
                         Some(select) => {
