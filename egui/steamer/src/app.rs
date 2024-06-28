@@ -3,9 +3,12 @@ use egui::{pos2, vec2, Align2, Color32, FontId, Frame, Id, Pos2, Rect, Response,
 use std::time::{Duration, Instant, SystemTime};
 use image::GenericImageView;
 use std::collections::HashMap;
+use egui::Button;
+use Iterator;
 
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)]
+
 pub struct TemplateApp {
     label: String,
     pos: Vec<Vec<Pos2>>,
@@ -19,7 +22,7 @@ pub struct TemplateApp {
     #[serde(skip)]
     image_texture: Vec<Option<TextureHandle>>,
     #[serde(skip)]
-    timer_start: HashMap::<usize,Option<Instant>>,
+    timer_start: HashMap::<usize,DateTime<Local>>,
     #[serde(skip)]
     buttons: Vec<bool>,
     hover: usize,
@@ -29,8 +32,10 @@ pub struct TemplateApp {
     bao_pos: Vec<Pos2>,
     shrimp_pos: Vec<Pos2>,
     #[serde(skip)]
-    steamer: Vec<Vec<Option<Item>>>,
-    show_inside:bool
+    steamer: Vec<Vec<(Option<Item>,DateTime<Local>)>>,
+    show_inside:bool,
+    button_index:usize,
+    ocupied: Vec<bool>,
 }
 
 #[derive(serde::Deserialize, serde::Serialize, Copy, Clone, Debug)]
@@ -61,6 +66,8 @@ impl Default for TemplateApp {
             selection: None,
             steamer: vec![Vec::new(); 20],
             show_inside:false,
+            button_index:0,
+            ocupied:vec![false; 20],
         }
     }
 }
@@ -132,33 +139,40 @@ impl eframe::App for TemplateApp {
                                     ui.menu_button("Add", |ui| {
                                         if ui.button("Shrimp").clicked() {
                                            self.selection = Some(Item::Shrimp);
-                                           self.timer_start.insert(but_index,Some(Instant::now()));
+                                           self.timer_start.insert(but_index,timenow());
                                            ui.close_menu();
                                         }
                                         if ui.button("XiaoLongBao").clicked() {
                                             self.selection = Some(Item::Xiaolongbao);
-                                            self.timer_start.insert(but_index,Some(Instant::now()));
+                                            self.timer_start.insert(but_index,timenow());
                                             ui.close_menu();
                                         }
                                    
                                         if ui.button("Chicken").clicked() {
                                             self.selection = Some(Item::ChickDumpling);    
-                                           self.timer_start.insert(but_index,Some(Instant::now()));
+                                           self.timer_start.insert(but_index,timenow());
                                             ui.close_menu();
                                         }
                                      
                                         if ui.button("FriedBun").clicked() {
                                             self.selection = Some(Item::FriedBun);
-                                            self.timer_start.insert(but_index,Some(Instant::now()));
+                                            self.timer_start.insert(but_index,timenow());
                                             ui.close_menu();
                                         }
                                         if let Some(selection) = self.selection {
-                                                self.steamer[but_index].push(Some(selection));
+                                                let time=timenow();
+                                                self.steamer[but_index].push((Some(selection),time));
                                                 self.selection = None;
-                                                self.timer_start.insert(but_index,Some(Instant::now()));
-
+                                                self.timer_start.insert(but_index,time);
+                                                self.ocupied[but_index]=true;
+                                         
                                          }
                                          
+                                    });
+                                    
+                                    ui.menu_button("Deleted", |ui| {
+                                    
+
                                     });
                                     
                                 });
@@ -168,20 +182,16 @@ impl eframe::App for TemplateApp {
                                 }
                                 
                                 if button.clicked() {
+                                    self.button_index=but_index;
                                     self.buttons = vec![false; 20];
                                     self.buttons[but_index] = true;
-                                    if let Some(selection) = self.selection {
-                                        self.steamer[but_index].push(Some(selection));
-                                        self.selection = None;
-                                        self.timer_start.insert(but_index,Some(Instant::now()));
-                                    
-                                    }
-
+                                 
                                 }
-                                
+                                let pos=Pos2{x:  button.rect.min.x+25.0,y:  button.rect.max.y+20.0};
+                                                        
                                 // Render images on buttons
                                 for item in self.steamer[but_index].iter() {
-                                    match item {
+                                    match item.0 {
                                         Some(select) => {
                                             match select {
                                                 Item::Shrimp => {
@@ -193,18 +203,18 @@ impl eframe::App for TemplateApp {
                                                             Color32::WHITE,
                                                         );
                                                     }
-                                                    if let Some(start_time) = self.timer_start.get(&but_index) {
-                                                        let elapsed = start_time.unwrap().elapsed();
-                                                   
-                                                        
-                                                   
-                                                    let min: i32 = (elapsed.as_secs_f32() / 60.0) as i32;
-                                                
-                                                    let time=format!("{}m {:.0} s", min, elapsed.as_secs_f32() % 60.0);
-                                                    let pos=Pos2{x:  button.rect.min.x+25.0,y:  button.rect.max.y+20.0};
+                                              
+                                                   if  self.steamer[but_index].len()>1{
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::BLACK);
+                                                    }else{
+                                                   if let Some(start_time) = self.timer_start.get(&but_index) {
+                                                        let elapsed =timenow().to_utc()-start_time.to_utc();
+                                                        let min= elapsed.num_minutes().to_string();
+                                                        let sec = elapsed.num_seconds() as i32;
+                                                        let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                                     
-                                                    ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
-                                                }
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                                }}
                                                 }
                                                 Item::Xiaolongbao => {
                                                     if let Some(texture) = &self.image_texture[1] {
@@ -215,14 +225,17 @@ impl eframe::App for TemplateApp {
                                                             Color32::WHITE,
                                                         );
                                                     }
-                                                    if let Some(start_time) = self.timer_start.get(&but_index) {
-                                                        let elapsed = start_time.unwrap().elapsed();
-                                                    let min: i32 = (elapsed.as_secs_f32() / 60.0) as i32;
-                                                    let time=format!("{}m {:.0} s", min, elapsed.as_secs_f32() % 60.0);
-                                               
-                                                    let pos=Pos2{x:  button.rect.min.x+25.0,y:  button.rect.max.y+20.0};
-                                                    ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
-                                                }
+                                                   if  self.steamer[but_index].len()>1{
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::BLACK);
+                                                    }else{
+                                                   if let Some(start_time) = self.timer_start.get(&but_index) {
+                                                        let elapsed =timenow().to_utc()-start_time.to_utc();
+                                                        let min= elapsed.num_minutes().to_string();
+                                                        let sec = elapsed.num_seconds() as i32;
+                                                        let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
+                                                        
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                                }}
                                                 }
                                                 Item::ChickDumpling => {
                                                     if let Some(texture) = &self.image_texture[2] {
@@ -234,18 +247,18 @@ impl eframe::App for TemplateApp {
                                                         );
                                                         
                                                     }
-                                                    if let Some(start_time) = self.timer_start.get(&but_index) {
-                                                        let elapsed = start_time.unwrap().elapsed();
-                                                   
+
+                                                   if  self.steamer[but_index].len()>1{
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::BLACK);
+                                                    }else{
+                                                   if let Some(start_time) = self.timer_start.get(&but_index) {
+                                                        let elapsed =timenow().to_utc()-start_time.to_utc();
+                                                        let min= elapsed.num_minutes().to_string();
+                                                        let sec = elapsed.num_seconds() as i32;
+                                                        let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                                         
-                                                   
-                                                    let min: i32 = (elapsed.as_secs_f32() / 60.0) as i32;
-                                                
-                                                    let time=format!("{}m {:.0} s", min, elapsed.as_secs_f32() % 60.0);
-                                                    let pos=Pos2{x:  button.rect.min.x+25.0,y:  button.rect.max.y+20.0};
-                                                    
-                                                    ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
-                                                }
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                                }}
                                                 }
                                                 Item::FriedBun => {
                                                     if let Some(texture) = &self.image_texture[3] {
@@ -256,18 +269,17 @@ impl eframe::App for TemplateApp {
                                                             Color32::WHITE,
                                                         );
                                                     }
-                                                    if let Some(start_time) = self.timer_start.get(&but_index) {
-                                                        let elapsed = start_time.unwrap().elapsed();
-                                                   
+                                                    if  self.steamer[but_index].len()>1{
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::BLACK);
+                                                    }else{
+                                                   if let Some(start_time) = self.timer_start.get(&but_index) {
+                                                        let elapsed =timenow().to_utc()-start_time.to_utc();
+                                                        let min= elapsed.num_minutes().to_string();
+                                                        let sec = elapsed.num_seconds() as i32;
+                                                        let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
                                                         
-                                                   
-                                                    let min: i32 = (elapsed.as_secs_f32() / 60.0) as i32;
-                                                
-                                                    let time=format!("{}m {:.0} s", min, elapsed.as_secs_f32() % 60.0);
-                                                    let pos=Pos2{x:  button.rect.min.x+25.0,y:  button.rect.max.y+20.0};
-                                                    
-                                                    ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
-                                                }
+                                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                                }}
                                                 }
                                             }
                                         }
@@ -286,22 +298,24 @@ impl eframe::App for TemplateApp {
                       
                                     if button.rect.contains(pos) {
                                         if let Some(selection) = self.selection {
-                                            self.steamer[but_index].push(Some(selection) );
+                                            let time=timenow();
+                                            self.steamer[but_index].push((Some(selection),time));
+                                            self.ocupied[but_index]=true;
                                             self.pos[i][index]= self.pos[i][self.count[i]];
-                                            self.timer_start.insert(but_index,Some(Instant::now()));
-
-                                            if let Some(start_time) = self.timer_start.get(&but_index) {
-                                                let elapsed = start_time.unwrap().elapsed();
-                                   
-                                            let min: i32 = (elapsed.as_secs_f32() / 60.0) as i32;
-                                        
-                                            let time=format!("{}m {:.0} s", min, elapsed.as_secs_f32() % 60.0);
-                                            let pos=Pos2{x:  button.rect.min.x+25.0,y:  button.rect.max.y+20.0};
+                                            self.timer_start.insert(but_index,time);
                                             
-                                            ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                            if  self.steamer[but_index].len()>1{
+                                                ui.painter().text(pos,Align2::CENTER_BOTTOM, self.steamer[but_index].len(),FontId::default(),Color32::BLACK);
+                                            }else{
+                                           if let Some(start_time) = self.timer_start.get(&but_index) {
+                                                let elapsed =timenow().to_utc()-start_time.to_utc();
+                                                let min= elapsed.num_minutes().to_string();
+                                                let sec = elapsed.num_seconds() as i32;
+                                                let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
+                                                ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                        }}
                                         }
-                                        }
-                                      
+                                        self.selection=None;
                                     
                                     }
                                 }
@@ -313,9 +327,9 @@ impl eframe::App for TemplateApp {
                          
                 }
             });
-
-     
             
+     
+            ui.label(format!("{:?}",self.selection));
             let widget_size = Vec2::new(75.0, 75.0);
                                 
             
@@ -324,7 +338,7 @@ impl eframe::App for TemplateApp {
                 
 
                 let rects = Rect::from_min_size(self.pos[i][self.count[i]], widget_size);
-
+                
                 let responses = ui.allocate_rect(rects, egui::Sense::click_and_drag());
 
                 if let Some(texture) = &self.image_texture[i] {
@@ -357,13 +371,7 @@ impl eframe::App for TemplateApp {
                 }
                 
                 if responses.clicked() {
-                    match i {
-                        0 => self.selection = Some(Item::Shrimp),
-                        1 => self.selection = Some(Item::Xiaolongbao),
-                        2 => self.selection = Some(Item::ChickDumpling),
-                        3 => self.selection = Some(Item::FriedBun),
-                        _ => {}
-                    };
+                  
                 }
 
           
@@ -383,13 +391,7 @@ impl eframe::App for TemplateApp {
                             self.pos[i][r] += self.response[i][r].drag_delta();
                         }
                         if self.response[i][r].clicked() {
-                            match i {
-                                0 => self.selection = Some(Item::Shrimp),
-                                1 => self.selection = Some(Item::Xiaolongbao),
-                                2 => self.selection = Some(Item::ChickDumpling),
-                                3 => self.selection = Some(Item::FriedBun),
-                                _ => {}
-                            };
+                          
                         }
                         if self.response[i][r].drag_stopped() {
                             match i {
@@ -415,15 +417,114 @@ impl eframe::App for TemplateApp {
                 }
             }
         });
+        
+        egui::SidePanel::right("right").show(ctx, |ui| {
+           let but_index= self.button_index;
+            for item in self.steamer[but_index].clone().into_iter().rev(){
+                let kind:String = Default::default();
+                let  button = ui.add_sized(
+                    [75.0, 75.0],
+                    Button::new(kind),);
+                ui.add_space(20.0);
+                let pos=Pos2{x:  button.rect.min.x+25.0,y:  button.rect.max.y+20.0};
 
-        egui::TopBottomPanel::bottom("bot").show(ctx, |ui| {});
+                match item.0 {
+                        Some(select) => {
+                            match select {
+                                Item::Shrimp =>{
+                                
+                                    if let Some(texture) = &self.image_texture[0] {
+                                        ui.painter().image(
+                                            texture.id(),
+                                            button.rect,
+                                            Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
+                                            Color32::WHITE,
+                                        );
+                                    }
+                                        let start_time= item.1;
+                                        let elapsed =timenow().to_utc()-start_time.to_utc();
+                                        let min= elapsed.num_minutes().to_string();
+                                        let sec = elapsed.num_seconds();
+                                        let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
+                                        
+                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                
+                                }
+                                Item::Xiaolongbao=>{
+                                    if let Some(texture) = &self.image_texture[1] {
+                                        ui.painter().image(
+                                            texture.id(),
+                                            button.rect,
+                                            Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
+                                            Color32::WHITE,
+                                        );
+                                    }
+                                        let start_time= item.1;
+                                        let elapsed =timenow().to_utc()-start_time.to_utc();
+                                        let min= elapsed.num_minutes().to_string();
+                                        let sec = elapsed.num_seconds();
+                                        let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
+                                        
+                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                
+                                }
+                                Item::ChickDumpling=>{
+                                    if let Some(texture) = &self.image_texture[2] {
+                                        ui.painter().image(
+                                            texture.id(),
+                                            button.rect,
+                                            Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
+                                            Color32::WHITE,
+                                        );
+                                    }
+                                        let start_time= item.1;
+                                        let elapsed =timenow().to_utc()-start_time.to_utc();
+                                        let min= elapsed.num_minutes().to_string();
+                                        let sec = elapsed.num_seconds();
+                                        let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
+                                        
+                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                
+                                }
+                                Item::FriedBun=>{
+                                    if let Some(texture) = &self.image_texture[3] {
+                                        ui.painter().image(
+                                            texture.id(),
+                                            button.rect,
+                                            Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
+                                            Color32::WHITE,
+                                        );
+                                    }
+                                    let start_time= item.1;
+                                        let elapsed =timenow().to_utc()-start_time.to_utc();
+                                        let min= elapsed.num_minutes().to_string();
+                                        let sec = elapsed.num_seconds();
+                                        let time=min+"m"+&format!{"{:.0}",(sec % 60)}+"s";
+                                        
+                                        ui.painter().text(pos,Align2::CENTER_BOTTOM,time,FontId::default(),Color32::BLACK);
+                                
+                                }
+                                
+                            }
+                        }
+                        _=>{
+                        
+                        }
+                }
 
+                
+                
+
+            }
+         
+               
+        });
+        
         ctx.request_repaint();
     }
 }
 
-pub fn timenow() -> String {
+pub fn timenow() -> DateTime<Local> {
     let time: DateTime<Local> = Local::now();
-    let now = time.format("%H:%M").to_string();
-    now
+   time
 }
