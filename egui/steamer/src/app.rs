@@ -139,7 +139,7 @@ impl eframe::App for TemplateApp {
                                     egui::Button::new(but_index.to_string())
                                 };
                                 let button = ui.add_sized(
-                                    [35.0, 35.0],
+                                    [50.0, 50.0],
                                     button,
                                 );
                                
