@@ -289,7 +289,7 @@ impl eframe::App for TemplateApp {
                                 }
                      
                           
-                                for i in 0..4 {
+                            /*     for i in 0..4 {
                                     let count=self.count[i];
                                     if count >0{
                                     let index=count-1;
@@ -320,7 +320,7 @@ impl eframe::App for TemplateApp {
                                     
                                     }
                                 }
-                                }
+                                } */
                             }
                         }
                     });
@@ -330,18 +330,18 @@ impl eframe::App for TemplateApp {
             });
             
      
-            ui.label(format!("{:?}",self.selection));
-            let widget_size = Vec2::new(75.0, 75.0);
+/*             ui.label(format!("{:?}",self.selection));
+            let widget_size = Vec2::new(75.0, 75.0); */
                                 
             
      
-            for i in 0..4 {
+/*             for i in 0..4 {
                 
-
+                
                 let rects = Rect::from_min_size(self.pos[i][self.count[i]], widget_size);
                 
                 let responses = ui.allocate_rect(rects, egui::Sense::click_and_drag());
-
+                
                 if let Some(texture) = &self.image_texture[i] {
                     ui.painter().image(texture.id(), rects, Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)), Color32::WHITE);
                 }
@@ -364,7 +364,7 @@ impl eframe::App for TemplateApp {
                         3 => self.selection = Some(Item::FriedBun),
                         _ => {}
                     };
-
+                
                 }
                 
                 if responses.dragged() {
@@ -374,14 +374,14 @@ impl eframe::App for TemplateApp {
                 if responses.clicked() {
                   
                 }
-
+                
           
               
                 for r in 0..self.count[i] {
                     let rect = Rect::from_min_size(self.pos[i][r], widget_size);
                     if !self.response[i].is_empty() {
                         self.response[i][r] = ui.allocate_rect(rect, egui::Sense::click_and_drag());
-
+                        
                         if let Some(texture) = &self.image_texture[i] {
                             ui.painter().image(texture.id(), rect, Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)), Color32::WHITE);
                         }
@@ -416,7 +416,7 @@ impl eframe::App for TemplateApp {
                         } */
                     }
                 }
-            }
+            } */
         });
         
         egui::SidePanel::right("right").show(ctx, |ui| {
