@@ -101,8 +101,8 @@ impl TemplateApp {
             }
         }
         cc.egui_ctx.set_zoom_factor(1.5);
-        cc.egui_ctx.send_viewport_cmd(ViewportCommand::SetTheme(SystemTheme::Light));
- 
+        cc.egui_ctx.set_visuals(egui::Visuals::light()); // Switch to light mode
+
         
         app
     }
